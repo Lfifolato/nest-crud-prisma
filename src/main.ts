@@ -1,7 +1,7 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter } from './@core/ExceptionsFilter/AllExceptionsFilter';
+import { BusinessExceptions } from './@core/ExceptionsFilter/BusinessExceptions';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,8 +13,7 @@ async function bootstrap() {
     }),
   );
 
-  const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+  app.useGlobalInterceptors(new BusinessExceptions());
 
   await app.listen(process.env.PORT || 3333);
 }
