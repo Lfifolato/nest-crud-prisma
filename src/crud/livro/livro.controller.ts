@@ -12,7 +12,9 @@ import {
 import { LivroService } from './livro.service';
 import { CreateLivroDto } from './dto/create-livro.dto';
 import { UpdateLivroDto } from './dto/update-livro.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Livro')
 @Controller('livro')
 export class LivroController {
   constructor(private readonly livroService: LivroService) {}
