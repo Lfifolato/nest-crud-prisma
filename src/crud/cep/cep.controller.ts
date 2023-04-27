@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { CepService } from './cep.service';
 import { CreateCepDto } from './dto/create-cep.dto';
-import { UpdateCepDto } from './dto/update-cep.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('cep')
@@ -22,23 +21,8 @@ export class CepController {
     return this.cepService.create(createCepDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cepService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cepService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCepDto: UpdateCepDto) {
-    return this.cepService.update(+id, updateCepDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cepService.remove(+id);
+  @Get(':cep')
+  findOne(@Param('cep') cep: string) {
+    return this.cepService.findOne(cep);
   }
 }

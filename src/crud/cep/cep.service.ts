@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCepDto } from './dto/create-cep.dto';
-import { UpdateCepDto } from './dto/update-cep.dto';
+import { PrismaService } from 'src/prisma-service/prisma.service';
+import { BusinessError } from 'src/@core/Errors/BusinessError';
 
 @Injectable()
 export class CepService {
-  create(createCepDto: CreateCepDto) {
-    return 'This action adds a new cep';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createCepDto: CreateCepDto) {
+    try {
+      const iscep = await this.prisma.cep.findUnique({
+        where: {
+          cep: createCepDto.cep,
+        },
+      });
+
+      if (iscep) {
+        await this.prisma.cep.delete({
+          where: {
+            id: iscep.id,
+          },
+        });
+      }
+
+      const createCep = await this.prisma.cep.create({
+        data: createCepDto,
+      });
+
+      const Dtoresponse = {
+        id: createCep.id,
+        cep: createCep.cep,
+      };
+
+      return Dtoresponse;
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all cep`;
-  }
+  async findOne(r: string) {
+    const cep = await this.prisma.cep.findUnique({
+      where: {
+        cep: r,
+      },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} cep`;
-  }
-
-  update(id: number, updateCepDto: UpdateCepDto) {
-    return `This action updates a #${id} cep`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cep`;
+    if (!cep) {
+      throw new BusinessError('cep not found');
+    }
+    if (cep.indprocessameto == 1) {
+      const DtoResponse = {
+        cep: cep.cep,
+        status: 'Pendente processamento',
+      };
+      return DtoResponse;
+    }
   }
 }

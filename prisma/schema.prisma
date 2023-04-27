@@ -27,11 +27,11 @@ model livros {
 model cep {
   id               Int               @id @default(autoincrement())
   cep              String
-  ddd              String
-  cidade           String
-  cod_ibge         String
-  state            String
-  address          String
+  ddd              String?
+  cidade           String?
+  cod_ibge         String?
+  state            String?
+  address          String?
   indprocessameto  Int               @default(1)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
