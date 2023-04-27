@@ -23,3 +23,32 @@ model livros {
   @@index([status])
   @@map("tb_libro")
 }
+
+model cep {
+  id               Int               @id @default(autoincrement())
+  cep              String
+  ddd              String
+  cidade           String
+  cod_ibge         String
+  state            String
+  address          String
+  indprocessameto  Int               @default(1)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  logProcessamento logProcessamento?
+
+  @@unique([cep])
+  @@map("tb_cep")
+}
+
+model logProcessamento {
+  id         Int      @id @default(autoincrement())
+  cepId      Int      @unique
+  cep        cep      @relation(fields: [cepId], references: [id])
+  codeStatus String
+  log        Json
+  createdAt  DateTime @default(now())
+
+  @@index([cepId])
+  @@map("tb_processamento_cep")
+}
