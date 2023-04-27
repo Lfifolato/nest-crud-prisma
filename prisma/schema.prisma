@@ -38,13 +38,14 @@ model cep {
   logProcessamento logProcessamento?
 
   @@unique([cep])
+  @@index([indprocessameto])
   @@map("tb_cep")
 }
 
 model logProcessamento {
   id         Int      @id @default(autoincrement())
   cepId      Int      @unique
-  cep        cep      @relation(fields: [cepId], references: [id])
+  cep        cep      @relation(fields: [cepId], references: [id], onDelete: Cascade)
   codeStatus String
   log        Json
   createdAt  DateTime @default(now())

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCepDto } from './dto/create-cep.dto';
-import { PrismaService } from 'src/prisma-service/prisma.service';
+import { PrismaService } from 'src/Services/prisma-service/prisma.service';
 import { BusinessError } from 'src/@core/Errors/BusinessError';
 
 @Injectable()
