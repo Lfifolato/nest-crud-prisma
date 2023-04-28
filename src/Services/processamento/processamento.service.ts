@@ -10,15 +10,14 @@ export class ProcessamentoService {
   constructor(private http: HttpService, private prisma: PrismaService) {}
   private readonly logger = new Logger();
 
-  // @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async processamento() {
-    this.logger.debug('Cron Job execution');
     const ceps = await this.buscaCepPendente();
 
     for (const item of ceps) {
       const res: HttpResponse = await this.http.getApi(item.cep);
 
-      if (!res.status == undefined) {
+      if (res.status == undefined) {
         await this.salvaLogProcessamento(res, item, '200');
         await this.AtualizaCep(res, item, '200');
       } else {

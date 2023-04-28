@@ -2,46 +2,53 @@ import { Injectable } from '@nestjs/common';
 import { CreateCepDto } from './dto/create-cep.dto';
 import { PrismaService } from 'src/Services/prisma-service/prisma.service';
 import { BusinessError } from 'src/@core/Errors/BusinessError';
+import { GetOneDto } from './dto/get-one.dto';
 
 @Injectable()
 export class CepService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCepDto: CreateCepDto) {
-    try {
-      const iscep = await this.prisma.cep.findUnique({
+    const iscep = await this.prisma.cep.findUnique({
+      where: {
+        cep: createCepDto.cep,
+      },
+    });
+
+    if (iscep) {
+      await this.prisma.cep.delete({
         where: {
-          cep: createCepDto.cep,
+          id: iscep.id,
         },
       });
-
-      if (iscep) {
-        await this.prisma.cep.delete({
-          where: {
-            id: iscep.id,
-          },
-        });
-      }
-
-      const createCep = await this.prisma.cep.create({
-        data: createCepDto,
-      });
-
-      const Dtoresponse = {
-        id: createCep.id,
-        cep: createCep.cep,
-      };
-
-      return Dtoresponse;
-    } catch (e: any) {
-      throw new Error(e.message);
     }
+
+    const createCep = await this.prisma.cep.create({
+      data: createCepDto,
+    });
+
+    const Dtoresponse = {
+      id: createCep.id,
+      cep: createCep.cep,
+    };
+
+    return Dtoresponse;
   }
 
-  async findOne(r: string) {
+  async findOne(Idcep: string) {
+    const CepResponseDto = new GetOneDto();
+
     const cep = await this.prisma.cep.findUnique({
       where: {
-        cep: r,
+        cep: Idcep,
+      },
+      include: {
+        logProcessamento: {
+          select: {
+            codeStatus: true,
+            log: true,
+          },
+        },
       },
     });
 
@@ -49,11 +56,23 @@ export class CepService {
       throw new BusinessError('cep not found');
     }
     if (cep.indprocessameto == 1) {
-      const DtoResponse = {
-        cep: cep.cep,
-        status: 'Pendente processamento',
-      };
-      return DtoResponse;
+      CepResponseDto.status = 'Pending';
+      CepResponseDto.id = cep.id;
+      CepResponseDto.cep = cep.cep;
+    } else if (cep.indprocessameto == 2) {
+      CepResponseDto.status = 'Success';
+      CepResponseDto.id = cep.id;
+      CepResponseDto.cep = cep.cep;
+      CepResponseDto.cidade = cep.cidade;
+      CepResponseDto.cod_ibge = cep.cod_ibge;
+      CepResponseDto.ddd = cep.ddd;
+    } else {
+      CepResponseDto.status = 'Error';
+      CepResponseDto.id = cep.id;
+      CepResponseDto.cep = cep.cep;
+      CepResponseDto.logProcessamento = cep.logProcessamento;
     }
+
+    return CepResponseDto;
   }
 }
