@@ -5,6 +5,7 @@ import { LivroModule } from './crud/livro/livro.module';
 import { CepModule } from './crud/cep/cep.module';
 import { ProcessamentoModule } from './Services/processamento/processamento.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UserModule } from './crud/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     CepModule,
     ProcessamentoModule,
     ScheduleModule.forRoot(),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
