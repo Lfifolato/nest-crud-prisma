@@ -17,6 +17,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new BusinessExceptions());
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Api Documentation')
     .setDescription('The Dev API description')
     .setVersion('1.0')
