@@ -3,4 +3,5 @@ export enum DtoTypes {
   IsString = 2,
   IsBoolean = 3,
   IsNumber = 4,
+  IsEmail = 5,
 }

@@ -15,4 +15,7 @@ export const DtoMensagem = (campo: string, error: number) => {
   if (error == DtoTypes.IsBoolean) {
     return `${DtoCampo} || type to boolean`;
   }
+  if (error == DtoTypes.IsEmail) {
+    return `${DtoCampo} || email invalid`;
+  }
 };
