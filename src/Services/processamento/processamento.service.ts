@@ -10,9 +10,10 @@ export class ProcessamentoService {
   constructor(private http: HttpService, private prisma: PrismaService) {}
   private readonly logger = new Logger();
 
-  // @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async processamento() {
     const ceps = await this.buscaCepPendente();
+    this.logger.log('cron job started');
 
     for (const item of ceps) {
       const res: HttpResponse = await this.http.getApi(item.cep);

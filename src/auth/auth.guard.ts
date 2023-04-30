@@ -14,13 +14,21 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'Unauthorized',
+        mensagem: 'token is required',
+      });
     }
 
     const isValidToken = await this.auth.isValidToken(token);
 
     if (!isValidToken) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        statusCode: 401,
+        error: 'Unauthorized',
+        mensagem: 'token is required',
+      });
     }
 
     return true;

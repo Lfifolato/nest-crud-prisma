@@ -10,10 +10,11 @@ import {
 } from '@nestjs/common';
 import { CepService } from './cep.service';
 import { CreateCepDto } from './dto/create-cep.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Cep')
+@ApiBearerAuth()
 @Controller('cep')
 @UseGuards(AuthGuard)
 export class CepController {
