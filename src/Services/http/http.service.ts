@@ -12,7 +12,7 @@ export class HttpService {
         status: 'Error',
         log: error.message,
       };
-
+      //ds
       return DtoErro;
     }
   }
